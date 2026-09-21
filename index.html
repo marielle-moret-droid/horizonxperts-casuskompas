@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casusadvies – Direct advies voor zorgmanagers</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --groen: #435338;
+    --groen-licht: #5a6f4a;
+    --rood: #a22018;
+    --magenta: #d3478d;
+    --roze-bg: #fdf4f6;
+    --zwart: #1c2122;
+    --salie: #d4d7b8;
+    --perzik: #fcd2a0;
+    --lichtroze: #ea81a4;
+    --bg: #fdf4f6;
+    --surface: #FFFFFF;
+    --text-primary: #1c2122;
+    --text-muted: #5a5856;
+    --border: rgba(67,83,56,0.15);
+  }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--groen);
+    padding: 1.25rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo-mark {
+    width: 36px; height: 36px;
+    background: var(--magenta);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    color: #FFFFFF;
+    flex-shrink: 0;
+  }
+  .logo-text {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: #FFFFFF;
+    letter-spacing: -0.01em;
+  }
+  .logo-sub {
+    font-size: 0.7rem;
+    color: var(--salie);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 400;
+    margin-left: auto;
+  }
+
+  /* MAIN LAYOUT */
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+    width: 100%;
+    flex: 1;
+  }
+
+  /* INTRO STRIP */
+  .intro {
+    background: rgba(67,83,56,0.07);
+    border: 1px solid var(--salie);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .intro-icon { font-size: 22px; margin-top: 2px; }
+  .intro h2 {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--rood);
+    margin-bottom: 0.25rem;
+  }
+  .intro p { font-size: 0.875rem; color: var(--groen); line-height: 1.6; }
+
+  /* FORM CARD */
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  /* THEME CHIPS */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .chip {
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.15s;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
+  }
+  .chip:hover { border-color: var(--groen); color: var(--groen); background: rgba(67,83,56,0.06); }
+  .chip.active {
+    background: var(--groen);
+    border-color: var(--rood);
+    color: #FFFFFF;
+    font-weight: 500;
+  }
+
+  /* TEXTAREA */
+  .casus-wrap { position: relative; margin-bottom: 1.5rem; }
+  textarea {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    resize: vertical;
+    min-height: 160px;
+    color: var(--text-primary);
+    background: var(--bg);
+    transition: border-color 0.15s;
+    outline: none;
+  }
+  textarea:focus { border-color: var(--salie); }
+  textarea::placeholder { color: var(--gray-200); }
+
+  /* CONTEXT FIELDS */
+  .meta-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .meta-field label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 500;
+  }
+  select, .meta-field input {
+    width: 100%;
+    padding: 0.55rem 0.85rem;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.15s;
+    appearance: none;
+  }
+  select:focus, .meta-field input:focus { border-color: var(--salie); }
+
+  /* DIEPTE TOGGLE */
+  .depth-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .depth-btn {
+    flex: 1;
+    padding: 0.6rem;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: transparent;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .depth-btn.active {
+    background: var(--groen);
+    border-color: var(--groen);
+    color: #FFFFFF;
+    font-weight: 500;
+  }
+
+  /* SUBMIT */
+  .submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--groen);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .submit-btn:hover:not(:disabled) { background: #354228; }
+  .submit-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  /* RESPONSE AREA */
+  .response-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    display: none;
+    animation: fadeUp 0.3s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .response-card.visible { display: block; }
+
+  .response-header {
+    background: var(--zwart);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .response-header h3 {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 300;
+    font-size: 1rem;
+    color: #FFFFFF;
+  }
+  .tag {
+    font-size: 0.7rem;
+    background: rgba(255,255,255,0.12);
+    color: var(--salie);
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .response-body { padding: 1.75rem 2rem; }
+
+  /* SECTION BLOCKS */
+  .resp-section {
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .resp-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .resp-section-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--rood);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .resp-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--salie);
+  }
+  .resp-content {
+    font-size: 0.925rem;
+    line-height: 1.8;
+    color: var(--text-primary);
+  }
+  .resp-content strong { font-weight: 600; color: var(--rood); }
+  .resp-content em { font-style: italic; color: var(--text-muted); }
+
+  /* ACTION BUTTONS */
+  .action-row {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1.25rem 2rem;
+    border-top: 1px solid var(--border);
+    background: var(--roze-bg);
+    flex-wrap: wrap;
+  }
+  .action-btn {
+    padding: 0.5rem 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.15s;
+    font-weight: 400;
+  }
+  .action-btn:hover { border-color: var(--magenta); color: var(--magenta); }
+
+  /* LOADING PULSE */
+  .loading-wrap { padding: 2.5rem 2rem; display: none; }
+  .loading-wrap.visible { display: block; }
+  .pulse-line {
+    height: 12px; border-radius: 6px;
+    background: linear-gradient(90deg, var(--salie) 25%, var(--roze-bg) 50%, var(--salie) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    margin-bottom: 0.75rem;
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* ERROR */
+  .error-box {
+    background: #FCEBEB;
+    border: 1px solid #F7C1C1;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    color: #791F1F;
+    font-size: 0.875rem;
+    display: none;
+    margin-top: 1rem;
+  }
+  .error-box.visible { display: block; }
+
+  /* HISTORY */
+  .history-section { margin-top: 2.5rem; }
+  .history-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+  .history-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.85rem 1.1rem;
+    cursor: pointer;
+    transition: border-color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .history-item:hover { border-color: var(--salie); }
+  .history-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--magenta);
+    flex-shrink: 0;
+  }
+  .history-text { font-size: 0.875rem; color: var(--text-muted); flex: 1; }
+  .history-chip {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    background: rgba(211,71,141,0.1);
+    color: var(--magenta);
+    border-radius: 6px;
+    font-weight: 500;
+  }
+
+  @media (max-width: 560px) {
+    .meta-row { grid-template-columns: 1fr; }
+    .container { padding: 1.5rem 1rem 3rem; }
+    header { padding: 1rem; }
+    .form-card { padding: 1.25rem; }
+    .response-body { padding: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-mark">C</div>
+  <span class="logo-text">Casusadvies</span>
+  <span class="logo-sub">Direct advies voor zorgmanagers</span>
+</header>
+
+<div class="container">
+
+  <div class="intro">
+    <span class="intro-icon">💡</span>
+    <div>
+      <h2>Casusadvies voor zorgmanagers</h2>
+      <p>Beschrijf de situatie waarmee u als zorgmanager te maken heeft. Casusadvies geeft u relevante theorie, inzichten en praktisch advies — afgestemd op de zorg- en welzijnssector.</p>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <span class="section-label">Thema</span>
+    <div class="chips" id="chips">
+      <button class="chip" data-value="leiderschap">Leiderschap</button>
+      <button class="chip" data-value="teamdynamiek">Teamdynamiek</button>
+      <button class="chip" data-value="verandermanagement">Verandermanagement</button>
+      <button class="chip" data-value="coaching">Coaching & Begeleiding</button>
+      <button class="chip" data-value="conflict">Conflicthantering</button>
+      <button class="chip" data-value="communicatie">Communicatie</button>
+      <button class="chip" data-value="verzuim">Verzuim & Welzijn</button>
+      <button class="chip" data-value="strategie">Strategie & Visie</button>
+      <button class="chip" data-value="cultuur">Organisatiecultuur</button>
+    </div>
+
+    <span class="section-label">Beschrijf uw casus</span>
+    <div class="casus-wrap">
+      <textarea id="casus" placeholder="Bijv: Ik ben manager van een verpleegteam van 14 medewerkers. Twee teamleden liggen al weken in conflict. De sfeer verslechtert en ik merk dat het de zorgkwaliteit begint te raken. Ik heb al een gesprek geprobeerd maar dat liep vast…"></textarea>
+    </div>
+
+    <div class="meta-row">
+      <div class="meta-field">
+        <label>Type organisatie</label>
+        <select id="org-type">
+          <option value="">Selecteer...</option>
+          <option value="ziekenhuis">Ziekenhuis / Kliniek</option>
+          <option value="vvt">VVT (Verpleging, Verzorging, Thuiszorg)</option>
+          <option value="ggz">GGZ / Psychiatrie</option>
+          <option value="jeugdzorg">Jeugdzorg</option>
+          <option value="gehandicaptenzorg">Gehandicaptenzorg</option>
+          <option value="welzijn">Welzijn / Maatschappelijk werk</option>
+          <option value="huisartsenzorg">Huisartsenzorg / Eerstelijn</option>
+          <option value="anders">Anders</option>
+        </select>
+      </div>
+      <div class="meta-field">
+        <label>Uw rol</label>
+        <select id="role">
+          <option value="">Selecteer...</option>
+          <option value="teamleider">Teamleider</option>
+          <option value="afdelingsmanager">Afdelingsmanager</option>
+          <option value="locatiemanager">Locatiemanager</option>
+          <option value="regiomanager">Regiomanager</option>
+          <option value="zorgdirecteur">Zorgdirecteur</option>
+          <option value="hr">HR / P&O</option>
+          <option value="anders">Anders</option>
+        </select>
+      </div>
+    </div>
+
+    <span class="section-label">Diepte van het advies</span>
+    <div class="depth-row" id="depth-row">
+      <button class="depth-btn active" data-value="snel">⚡ Snel inzicht (2 min)</button>
+      <button class="depth-btn" data-value="uitgebreid">📖 Uitgebreid advies</button>
+      <button class="depth-btn" data-value="actieplan">🗺 Actieplan</button>
+    </div>
+
+    <button class="submit-btn" id="submit-btn" onclick="submitCasus()">
+      <span>Analyseer casus</span>
+      <span>→</span>
+    </button>
+
+    <div class="error-box" id="error-box"></div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-wrap" id="loading">
+    <div class="pulse-line" style="width:60%"></div>
+    <div class="pulse-line" style="width:80%"></div>
+    <div class="pulse-line" style="width:45%"></div>
+    <div class="pulse-line" style="width:70%"></div>
+    <div class="pulse-line" style="width:55%"></div>
+  </div>
+
+  <!-- RESPONSE -->
+  <div class="response-card" id="response-card">
+    <div class="response-header">
+      <h3 id="resp-title">Advies voor uw casus</h3>
+      <span class="tag" id="resp-tag">Analyse</span>
+    </div>
+    <div class="response-body" id="response-body"></div>
+    <div class="action-row">
+      <button class="action-btn" onclick="followUp('Geef me meer concrete voorbeelden van aanpak')">Meer concrete voorbeelden →</button>
+      <button class="action-btn" onclick="followUp('Welke valkuilen moet ik vermijden?')">Valkuilen →</button>
+      <button class="action-btn" onclick="followUp('Hoe betrek ik het team hierbij?')">Team betrekken →</button>
+      <button class="action-btn" onclick="followUp('Geef aanbevolen literatuur of training')">Literatuur & training →</button>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="history-section" id="history-section" style="display:none">
+    <div class="history-title">Eerdere casussen deze sessie</div>
+    <div id="history-list"></div>
+  </div>
+
+</div>
+
+<script>
+  let selectedTheme = '';
+  let selectedDepth = 'snel';
+  let conversationHistory = [];
+  let sessionHistory = [];
+
+  // Chips
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      selectedTheme = chip.dataset.value;
+    });
+  });
+
+  // Depth buttons
+  document.querySelectorAll('.depth-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.depth-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedDepth = btn.dataset.value;
+    });
+  });
+
+  function buildSystemPrompt() {
+    return `Je bent Casusadvies, een deskundige adviseur voor managers in de zorg- en welzijnssector, ontwikkeld door HorizonXperts. Je werkt vanuit de methodologie en inzichten van HorizonXperts, aangevuld met brede managementkennis.
+
+## HORIZONXPERTS KENNISFUNDAMENT
+
+### Kernwaarden (de 5 V's van HorizonXperts)
+Verbinding | Vertrouwen | Verantwoordelijkheid | Vrijheid | Vakmanschap
+Gebruik deze waarden als kompas bij het analyseren van casussen.
+
+### Centraal concept: Professioneel Eigenaarschap
+Eigenaarschap is GEEN karaktertrek maar een CONTEXTVRAAGSTUK.
+- Eigenaarschap gaat over je plek innemen: weten wat van jou is, wat van de ander is, en wat van het systeem is.
+- Inzet zonder eigenaarschap leidt tot uitputting. Loyaliteit zonder eigenaarschap leidt tot stil verzet. Hard werken zonder eigenaarschap leidt tot brandjes blussen.
+- Eigenaarschap groeit wanneer: rollen helder zijn, kaders expliciet zijn, leren veilig is, spanning benoemd mag worden.
+- Zelfdeterminatietheorie (Deci & Ryan): mensen nemen duurzaam verantwoordelijkheid wanneer AUTONOMIE, COMPETENTIE en VERBONDENHEID in balans zijn.
+
+### De Sluipmoordenaar van Verantwoordelijkheid
+Drie patronen die eigenaarschap ondermijnen:
+1. REDDEN: structureel taken overnemen van collega's, ook al bedoel je het goed
+2. SUSSEN: spanning wegpoetsen in plaats van bespreekbaar maken ("het komt wel goed")
+3. INVULLEN: besluiten nemen voor anderen, intenties invullen voor de ander
+Verbinding: Dramadriehoek (Karpman) - Slachtoffer, Redder, Aanklager
+Doorbraak: spanning laten bestaan, verantwoordelijkheid terugleggen, helderheid boven harmonie
+
+### Vertrouwen als fundament (Symfonie van Vertrouwen)
+Drie lagen van vertrouwen:
+1. Persoonlijk vertrouwen: ik geloof dat je het goed bedoelt en doet wat je zegt
+2. Professioneel vertrouwen: ik vertrouw je vakmanschap, je durft ook te zeggen wat je niet weet
+3. Systeemvertrouwen: de kaders zijn helder, besluiten worden uitlegbaar genomen
+Wanneer één laag ontbreekt worden teams voorzichtig en houdt initiatief op.
+Psychologische veiligheid (Amy Edmondson) is randvoorwaarde: mag ik me uitspreken zonder afgestraft te worden?
+
+### Leiderschap: Kaderen zonder Dichtregelen
+- Leiderschap schept de bedding waarin eigenaarschap groeit of verschrompelt
+- Leiders die kaders vaag laten, spanning weg organiseren of verantwoordelijkheden overnemen maken eigenaarschap klein
+- Simon Sinek (Circle of Safety): mensen nemen verantwoordelijkheid wanneer ze veilig voelen binnen duidelijke kaders
+- De kunst: ruimte geven zonder los te laten, kaderen zonder dichtregelen, spanning dragen
+
+### Patronen die HorizonXperts herkent in zorgorganisaties
+- Loyaliteit zonder begrenzing leidt tot afhankelijkheidscultuur (Schein: wat we normaliseren wordt cultuur)
+- Harmonie boven helderheid: conflict vermijden is basisdysfunctie van teams (Lencioni)
+- "Wij moeten het oplossen": verantwoordelijkheid die eigenlijk op systeemniveau thuishoort
+- Zwijgen als professioneel gedrag: ondermijnt eigenaarschap
+- Besluiten nemen zonder betrokkenheid: professionals haken mentaal af
+
+### Module-thema's van HorizonXperts (leidraad bij analyse)
+Module 1: Fundament van professioneel eigenaarschap
+Module 2: Helderheid in verantwoordelijkheden / de sluipmoordenaar
+Module 3: Vertrouwen en onderstroom
+Module 4: Leiderschap: kaderen zonder dichtregelen
+Module 5: Meten met betekenis (eigenaarschap zichtbaar maken zonder te versmallen)
+Module 6: Van inzicht naar actie (30-dagenperspectief)
+Module 7: Eigenaarschap bij verandering
+Module 8: Impact maken en betekenis zichtbaar houden
+Module 9: Eigenaarschap onderhouden en borgen
+
+## AANVULLENDE THEORIEËN
+- Situationeel leiderschap (Hersey & Blanchard): pas stijl aan op ontwikkelstadium medewerker
+- Kernkwadranten (Ofman): kwaliteit, valkuil, uitdaging, allergie
+- DISC-model: gedragsstijlen in teams herkennen en benutten
+- Rouwcurve (Kübler-Ross / Bridges): verandering als verliesproces, fasering van weerstand
+- Positieve psychologie (Seligman): PERMA-model, sterktegericht werken
+- Systemisch denken: patronen in het systeem zichtbaar maken, niet alleen bij het individu
+- VUCA-leiderschap: wendbaarheid in complexe, onzekere omgevingen
+- Brené Brown: kwetsbaarheid als kracht, "clear is kind, unclear is unkind"
+- HOT-methodologie (HorizonXperts): Helder kaderen, Onderstroom zichtbaar maken, Terugleggen van verantwoordelijkheid
+- Why/How/What/We (HorizonXperts uitbreiding op Golden Circle Sinek): betekenis als vertrekpunt
+
+## JE ROL EN TONE OF VOICE
+- Warm maar direct. Geen wollige adviezen.
+- Noem patronen bij de naam, ook als ze confronterend zijn.
+- Schrijf als een ervaren collega die naast de manager staat, niet boven.
+- Gebruik concrete voorbeelden uit de zorgpraktijk (wijkteams, VVT, GGZ, jeugdzorg, etc.)
+- Stel reflectievragen die écht doordenken uitnodigen.
+- Schrijf altijd in het Nederlands.
+- Geen disclaimers, geen onnodige voorbehouden.
+- Refereer expliciet aan HorizonXperts-concepten waar relevant (eigenaarschap, de 5 V's, HOT-methodologie).
+
+## STRUCTUUR VAN HET ANTWOORD
+Gebruik HTML-secties:
+<section class="resp-section">
+  <div class="resp-section-title">[SECTIETITEL]</div>
+  <div class="resp-content">[INHOUD]</div>
+</section>
+
+Voor 'snel' (3 secties): "Wat speelt er werkelijk", "HorizonXperts-lens en theorie", "Eerste concrete stappen"
+Voor 'uitgebreid' (5 secties): "Diagnose van de situatie", "Theoretisch kader", "Onderliggende dynamiek en patronen", "Aanbevolen aanpak", "Reflectievraag voor jou en je team"
+Voor 'actieplan' (6 secties): "Situatieanalyse", "Theoretisch fundament", "Root causes en patronen", "Acties deze week", "Aanpak komende maand", "Hoe weet je dat het werkt?"
+
+Gebruik <strong> voor sleutelbegrippen en theorienamen. Gebruik <em> voor reflectievragen en uitnodigingen tot verdieping.`;
+  }
+
+  async function submitCasus() {
+    const casus = document.getElementById('casus').value.trim();
+    if (!casus || casus.length < 30) {
+      showError('Beschrijf uw casus uitgebreider zodat ik u goed kan adviseren.');
+      return;
+    }
+
+    const orgType = document.getElementById('org-type').value;
+    const role = document.getElementById('role').value;
+
+    const contextParts = [];
+    if (selectedTheme) contextParts.push(`Thema: ${selectedTheme}`);
+    if (orgType) contextParts.push(`Organisatie: ${orgType}`);
+    if (role) contextParts.push(`Rol: ${role}`);
+    contextParts.push(`Gewenste diepte: ${selectedDepth}`);
+
+    const userMessage = `${contextParts.join(' | ')}\n\nCasus:\n${casus}`;
+
+    conversationHistory = [];
+    conversationHistory.push({ role: 'user', content: userMessage });
+
+    showLoading();
+    hideError();
+
+    try {
+      const response = await callClaude(conversationHistory);
+      const assistantMessage = extractText(response);
+
+      conversationHistory.push({ role: 'assistant', content: assistantMessage });
+      showResponse(assistantMessage, selectedTheme || 'Casus');
+      saveToHistory(casus, selectedTheme);
+    } catch (err) {
+      hideLoading();
+      showError('Er ging iets mis: ' + err.message);
+    }
+  }
+
+  async function followUp(question) {
+    if (!conversationHistory.length) return;
+
+    conversationHistory.push({ role: 'user', content: question });
+    showLoading();
+
+    try {
+      const response = await callClaude(conversationHistory);
+      const assistantMessage = extractText(response);
+      conversationHistory.push({ role: 'assistant', content: assistantMessage });
+      showResponse(assistantMessage, 'Verdieping');
+    } catch (err) {
+      hideLoading();
+      showError('Ophalen van advies mislukt. Probeer opnieuw.');
+    }
+  }
+
+  async function callClaude(messages) {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1800,
+        system: buildSystemPrompt(),
+        messages: messages
+      })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || `HTTP ${res.status}`);
+    }
+    return res.json();
+  }
+
+  function extractText(data) {
+    if (!data.content || !data.content.length) return '';
+    return data.content.filter(b => b.type === 'text').map(b => b.text).join('\n');
+  }
+
+  function showLoading() {
+    document.getElementById('loading').classList.add('visible');
+    document.getElementById('response-card').classList.remove('visible');
+    document.getElementById('submit-btn').disabled = true;
+  }
+
+  function hideLoading() {
+    document.getElementById('loading').classList.remove('visible');
+    document.getElementById('submit-btn').disabled = false;
+  }
+
+  function showResponse(html, theme) {
+    hideLoading();
+    const card = document.getElementById('response-card');
+    document.getElementById('response-body').innerHTML = html;
+    const themeLabels = {
+      leiderschap: 'Leiderschap', teamdynamiek: 'Teamdynamiek',
+      verandermanagement: 'Verandering', coaching: 'Coaching',
+      conflict: 'Conflict', communicatie: 'Communicatie',
+      verzuim: 'Verzuim', strategie: 'Strategie', cultuur: 'Cultuur'
+    };
+    document.getElementById('resp-tag').textContent = themeLabels[theme] || theme || 'Analyse';
+    card.classList.add('visible');
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function showError(msg) {
+    const box = document.getElementById('error-box');
+    box.textContent = msg;
+    box.classList.add('visible');
+  }
+
+  function hideError() {
+    document.getElementById('error-box').classList.remove('visible');
+  }
+
+  function saveToHistory(casus, theme) {
+    const snippet = casus.length > 60 ? casus.substring(0, 60) + '…' : casus;
+    sessionHistory.unshift({ snippet, theme, history: [...conversationHistory] });
+    renderHistory();
+  }
+
+  function renderHistory() {
+    if (!sessionHistory.length) return;
+    document.getElementById('history-section').style.display = 'block';
+    const list = document.getElementById('history-list');
+    list.innerHTML = sessionHistory.slice(0, 5).map((item, i) => `
+      <div class="history-item" onclick="loadHistory(${i})">
+        <div class="history-dot"></div>
+        <span class="history-text">${item.snippet}</span>
+        ${item.theme ? `<span class="history-chip">${item.theme}</span>` : ''}
+      </div>
+    `).join('');
+  }
+
+  function loadHistory(i) {
+    const item = sessionHistory[i];
+    conversationHistory = [...item.history];
+    const lastAssistant = [...conversationHistory].reverse().find(m => m.role === 'assistant');
+    if (lastAssistant) showResponse(lastAssistant.content, item.theme);
+  }
+</script>
+
+</body>
+</html>
